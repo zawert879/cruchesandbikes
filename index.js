@@ -1,6 +1,11 @@
 const TelegramBot = require('node-telegram-bot-api');
 const mysql = require('mysql');
 
+var accuweather = require('node-accuweather')()('MQ5mPDjyi50yNYJJmY0to8fGj8wnimyd');
+
+
+
+
 const cMysql = mysql.createPool({
         database : 'cruchesandbikes',
         host     : 'localhost',
@@ -46,6 +51,19 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 
     bot.sendMessage(chatId, resp);
 });
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.from.id;
+bot.sendMessage(chatId, 'Добро пожаловать');
+});
+bot.onText(/\/погода/, (msg) => {
+    const chatId = msg.from.id;
+accuweather.getCurrentConditions("rostov-on-don", {unit: "Celsius"})
+    .then(function(result) {
+        bot.sendMessage(chatId, "В Ростове на дону "+result.Temperature+"  градусов по цельсию");
+    });
+
+});
+
 
 bot.onText(/\/лист/,(msg) =>{
    const chatId = msg.chat.id;
@@ -67,8 +85,7 @@ bot.onText(/\/лист/,(msg) =>{
                         }
                             // console.log(rows.length);
                             // console.log(rows[0].name);
-                        bot.sendMessage(chatId, kek);
-                        // make someting with rows
+                            bot.sendMessage(chatId, kek);
                     }
                 });
         }
@@ -100,7 +117,7 @@ bot.onText(/\/лист/,(msg) =>{
 
 bot.on('message', (msg) => {
     // console.log(msg);
-        var curDate = new Date().getHours() + ':' + new Date().getMinutes();
+        var curDate =new Date().getDate()+':'+new Date().getMonth()+':'+ new Date().getHours() + ':' + new Date().getMinutes();
         console.log(curDate+':'+msg.from.username+':'+msg.text);
 });
 
