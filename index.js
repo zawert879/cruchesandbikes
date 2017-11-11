@@ -1,9 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const mysql = require('mysql');
-
-var accuweather = require('node-accuweather')()('MQ5mPDjyi50yNYJJmY0to8fGj8wnimyd');
-
-
+const accuweather = require('node-accuweather')()('0SeYOltRoH1AkMj4NEC1cicWKDpNTzCl');
 
 
 const cMysql = mysql.createPool({
@@ -51,18 +48,85 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 
     bot.sendMessage(chatId, resp);
 });
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.from.id;
-bot.sendMessage(chatId, 'Добро пожаловать');
-});
-bot.onText(/\/погода/, (msg) => {
-    const chatId = msg.from.id;
-accuweather.getCurrentConditions("rostov-on-don", {unit: "Celsius"})
-    .then(function(result) {
-        bot.sendMessage(chatId, "В Ростове на дону "+result.Temperature+"  градусов по цельсию");
-    });
 
-});
+// bot.onText(/\/погода/, (msg) => {
+//     const chatId = msg.from.id;
+//     accuweather.getCurrentConditions("rostov-on-don", {unit: "Celsius"})
+//         .then(function(result) {
+            console.log(result);
+            // let summary ;
+            // switch (result.Summary){
+            //     case 'Cloudy':
+            //         summary = 'Облочно';
+            //         break;
+            //     case 'rain':
+            //         summary = 'дождь';
+            //         break;
+            //     case 'Light fog':
+            //         summary = 'легкий туман';
+            //         break;
+            //     default :
+            //         summary = '';
+            //         break;
+            // }
+            // bot.sendMessage(chatId,"В Ростове на дону "+result.Temperature+"  градусов по цельсию,"+summary);
+        // });
+// });
+// bot.onText(/\утро/,(msg)=>{
+//     const chatId = msg.chat.id;
+//     wakeup(chatId);
+// });
+function wakeup(chatId) {
+    accuweather.getCurrentConditions("rostov-on-don", {unit: "Celsius"})
+        .then(function(result) {
+            // console.log(result);
+            let summary ;
+            switch (result.Summary){
+                case 'Cloudy':
+                    summary = 'Облочно';
+                    break;
+                case 'rain':
+                    summary = 'дождь';
+                    break;
+                case 'Light fog':
+                    summary = 'легкий туман';
+                    break;
+                default :
+                    summary = '';
+                    break;
+            }
+
+
+            cMysql.getConnection(function (err, conn) {
+        if (err) {
+            console.log("MYSQL: can't get connection from pool:", err)
+        } else {
+            conn.query("SELECT * FROM test",
+                function (er, rows) {
+                    if (er) {
+                        conn.release();
+                        console.log("MYSQL: ERROR: ", err);
+                    } else {
+                        let buff = '';
+                        conn.release();
+                        for (let i=0;i< rows.length;i++){
+                            buff = buff+ rows[i].name+'\n';
+                        }
+                        let curtime =new Date().getHours() + ':' + new Date().getMinutes();
+
+                        console.log(buff);
+                        let message = 'Доброе утро' +'\n'+
+                            "В Ростове на дону "+result.Temperature+" градусов по цельсию"+summary+'\n'+
+                            'Сегодня 12 ноября ,'+curtime +'\n' +
+                            'мои дела:\n'+buff;
+                        bot.sendMessage(chatId,message);
+                    }
+                });
+        }
+
+    });
+        });
+}
 
 
 bot.onText(/\/лист/,(msg) =>{
@@ -79,45 +143,22 @@ bot.onText(/\/лист/,(msg) =>{
                         console.log("MYSQL: ERROR: ", err);
                     } else {
                         conn.release();
-                        var kek = '';
-                        for (var i=0;i< rows.length;i++){
-                            kek = kek+ rows[i].name+'\n';
+                        let buff = '';
+                        for (let i=0;i< rows.length;i++){
+                            buff = buff+ rows[i].name+'\n';
                         }
                             // console.log(rows.length);
                             // console.log(rows[0].name);
-                            bot.sendMessage(chatId, kek);
+                            bot.sendMessage(chatId, buff);
                     }
                 });
         }
     });
 });
 
-
-
-// Listen for any kind of message. There are different kinds of
-// messages.
-//
-// function addinsql(name) {
-//     cMysql.getConnection(function(err,conn){
-//         if(err){
-//             console.log("MYSQL: can't get connection from pool:",err)
-//         }else {
-//             conn.query("INSERT INTO test (name) VALUES ('"+name+"')",
-//                 function(er,rows){
-//                     if(er){
-//                         conn.release();
-//                         console.log("MYSQL: ERROR: ",err);
-//                     } else {
-//                         conn.release();
-//                     }
-//                 });
-//         }
-//     });
-// }
-
 bot.on('message', (msg) => {
     // console.log(msg);
-        var curDate =new Date().getDate()+':'+new Date().getMonth()+':'+ new Date().getHours() + ':' + new Date().getMinutes();
+        let curDate =new Date().getDate()+':'+new Date().getMonth()+':'+ new Date().getHours() + ':' + new Date().getMinutes();
         console.log(curDate+':'+msg.from.username+':'+msg.text);
 });
 
