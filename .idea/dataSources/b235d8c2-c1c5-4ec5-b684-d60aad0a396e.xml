@@ -1,87 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="cruchesandbikes@192.168.161.57">
+<dataSource name="cruchesandbikes@localhost">
   <database-model serializer="dbm" rdbms="MYSQL" format-version="4.4">
     <root id="1"/>
     <schema id="2" parent="1" name="cruchesandbikes">
       <Current>1</Current>
       <Visible>1</Visible>
     </schema>
-    <schema id="3" parent="1" name="holod"/>
-    <schema id="4" parent="1" name="ifridge"/>
-    <schema id="5" parent="1" name="information_schema"/>
-    <schema id="6" parent="1" name="mysql"/>
-    <schema id="7" parent="1" name="performance_schema"/>
-    <schema id="8" parent="1" name="phpmyadmin"/>
-    <table id="9" parent="2" name="reminders"/>
-    <table id="10" parent="2" name="users"/>
-    <column id="11" parent="9" name="id">
+    <schema id="3" parent="1" name="information_schema"/>
+    <schema id="4" parent="1" name="mysql"/>
+    <schema id="5" parent="1" name="performance_schema"/>
+    <schema id="6" parent="1" name="SportService"/>
+    <schema id="7" parent="1" name="sys"/>
+    <table id="8" parent="2" name="reminders"/>
+    <table id="9" parent="2" name="users"/>
+    <column id="10" parent="8" name="id">
       <Position>1</Position>
-      <DataType>int(255)|0</DataType>
+      <DataType>int(10)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="12" parent="9" name="user_id">
+    <column id="11" parent="8" name="text">
       <Position>2</Position>
-      <DataType>int(255)|0</DataType>
+      <DataType>varchar(128)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="13" parent="9" name="text">
+    <column id="12" parent="8" name="date">
       <Position>3</Position>
-      <DataType>int(255)|0</DataType>
+      <DataType>timestamp|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="14" parent="9" name="date">
+    <column id="13" parent="8" name="created_at">
       <Position>4</Position>
-      <DataType>date|0</DataType>
+      <DataType>timestamp|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="15" parent="9" name="created_at">
+    <column id="14" parent="8" name="updated_at">
       <Position>5</Position>
       <DataType>timestamp|0</DataType>
-      <NotNull>1</NotNull>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
     </column>
-    <column id="16" parent="9" name="updated_at">
+    <column id="15" parent="8" name="user_id">
       <Position>6</Position>
-      <DataType>timestamp|0</DataType>
-      <DefaultExpression>&apos;0000-00-00 00:00:00&apos;</DefaultExpression>
+      <DataType>int(10)|0</DataType>
+      <NotNull>1</NotNull>
     </column>
-    <index id="17" parent="9" name="reminders_fk0">
+    <index id="16" parent="8" name="reminders_fk0">
       <ColNames>user_id</ColNames>
     </index>
-    <key id="18" parent="9" name="PRIMARY">
+    <key id="17" parent="8" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="19" parent="9" name="reminders_fk0">
+    <foreign-key id="18" parent="8" name="reminders_fk0">
       <ColNames>user_id</ColNames>
       <RefSchemaName>cruchesandbikes</RefSchemaName>
       <RefTableName>users</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="20" parent="10" name="id">
+    <column id="19" parent="9" name="id">
       <Position>1</Position>
-      <DataType>int(255)|0</DataType>
+      <DataType>int(10)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="21" parent="10" name="telegram_id">
+    <column id="20" parent="9" name="telegram_id">
       <Position>2</Position>
-      <DataType>int(255)|0</DataType>
+      <DataType>int(10)|0</DataType>
     </column>
-    <column id="22" parent="10" name="vk_id">
+    <column id="21" parent="9" name="vk_id">
       <Position>3</Position>
-      <DataType>int(255)|0</DataType>
+      <DataType>int(10)|0</DataType>
     </column>
-    <column id="23" parent="10" name="city">
+    <column id="22" parent="9" name="city">
       <Position>4</Position>
-      <DataType>varchar(255)|0</DataType>
+      <DataType>varchar(128)|0</DataType>
     </column>
-    <key id="24" parent="10" name="PRIMARY">
+    <index id="23" parent="9" name="telegram_id">
+      <ColNames>telegram_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="24" parent="9" name="vk_id">
+      <ColNames>vk_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="25" parent="9" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
+    </key>
+    <key id="26" parent="9" name="telegram_id">
+      <ColNames>telegram_id</ColNames>
+      <UnderlyingIndexName>telegram_id</UnderlyingIndexName>
+    </key>
+    <key id="27" parent="9" name="vk_id">
+      <ColNames>vk_id</ColNames>
+      <UnderlyingIndexName>vk_id</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>
